@@ -1,82 +1,26 @@
 # pass.in
 
-O pass.in é uma aplicação de **gestão de participantes em eventos presenciais**. 
+pass.in is an application for **managing participants at face-to-face events**. 
 
-A ferramenta permite que o organizador cadastre um evento e abra uma página pública de inscrição.
+The tool allows the organizer to register an event and open a public registration page.
 
-Os participantes inscritos podem emitir uma credencial para check-in no dia do evento.
+Registered participants can issue a credential for check-in on the day of the event.
 
-O sistema fará um scan da credencial do participante para permitir a entrada no evento.
+The system will scan the participant's credential to allow entry to the event.
 
-## Requisitos
+## Requirements
 
-### Requisitos funcionais
+### Functional requirements
 
-- [x] O organizador deve poder cadastrar um novo evento;
-- [x] O organizador deve poder visualizar dados de um evento;
-- [x] O organizador deve poser visualizar a lista de participantes; 
-- [x] O participante deve poder se inscrever em um evento;
-- [x] O participante deve poder visualizar seu crachá de inscrição;
-- [x] O participante deve poder realizar check-in no evento;
+- [x] The organizer must be able to register a new event;
+- [x] The organizer must be able to view data from an event;
+- [x] The organizer must be able to view the list of participants; 
+- [x] The participant must be able to register for an event;
+- [x] The participant must be able to view their registration badge;
+- [x] The participant must be able to check in at the event;
 
-### Regras de negócio
+### Business rules
 
-- [x] O participante só pode se inscrever em um evento uma única vez;
-- [x] O participante só pode se inscrever em eventos com vagas disponíveis;
-- [x] O participante só pode realizar check-in em um evento uma única vez;
-
-### Requisitos não-funcionais
-
-- [x] O check-in no evento será realizado através de um QRCode;
-
-## Documentação da API (Swagger)
-
-Para documentação da API, acesse o link: https://nlw-unite-nodejs.onrender.com/docs
-
-## Banco de dados
-
-Nessa aplicação vamos utilizar banco de dados relacional (SQL). Para ambiente de desenvolvimento seguiremos com o SQLite pela facilidade do ambiente.
-
-### Diagrama ERD
-
-<img src=".github/erd.svg" width="600" alt="Diagrama ERD do banco de dados" />
-
-### Estrutura do banco (SQL)
-
-```sql
--- CreateTable
-CREATE TABLE "events" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "title" TEXT NOT NULL,
-    "details" TEXT,
-    "slug" TEXT NOT NULL,
-    "maximum_attendees" INTEGER
-);
-
--- CreateTable
-CREATE TABLE "attendees" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "name" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "event_id" TEXT NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "attendees_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "events" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "check_ins" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "attendeeId" INTEGER NOT NULL,
-    CONSTRAINT "check_ins_attendeeId_fkey" FOREIGN KEY ("attendeeId") REFERENCES "attendees" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateIndex
-CREATE UNIQUE INDEX "events_slug_key" ON "events"("slug");
-
--- CreateIndex
-CREATE UNIQUE INDEX "attendees_event_id_email_key" ON "attendees"("event_id", "email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "check_ins_attendeeId_key" ON "check_ins"("attendeeId");
-```
+- [x] The participant can only register for an event once;
+- [x] The participant can only register for events with available places;
+- [x] The participant can only check-in to an event once;
